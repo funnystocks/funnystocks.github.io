@@ -1,0 +1,8 @@
+Files - **PUBLIC DOMAIN ONLY**
+svgtopng.com was used to convert .svg files to .png files
+
+Desktop Background - https://en.wikipedia.org/wiki/File:Top_of_Atmosphere.jpg
+Text Editor - https://en.wikipedia.org/wiki/File:Shades_of_Red.svg - **CONVERTED TO PNG**
+Web Browser - https://en.wikipedia.org/wiki/File:Shades_of_Blue.svg - **CONVERTED TO PNG**
+File Explorer - https://en.wikipedia.org/wiki/File:Shades_of_Green.svg - **CONVERTED TO PNG**
+Exit - https://commons.wikimedia.org/wiki/File:Greek_Chi_normal.svg - **CONVERTED TO PNG**
