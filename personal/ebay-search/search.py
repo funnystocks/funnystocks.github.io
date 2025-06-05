@@ -23,13 +23,14 @@ w = root.winfo_width()
 h = root.winfo_height()
 frame = tk.Frame(root, relief="flat", borderwidth=0, highlightthickness=0)
 frame.place(x=w / 8, y=h / 8, width=(w*3/4), height=(h*7/8))
-buttons = [tk.Button(frame, relief="flat", borderwidth=0, highlightthickness=0, command=lambda: open_tab(""), text="") for l in range(limit)]
-number = [tk.Button(frame, relief="flat", borderwidth=0, highlightthickness=0, command=lambda: open_tab(""), text=str(n+1)) for n in range(limit)]
 root.update_idletasks()
 f_width = frame.winfo_width()
 f_height = frame.winfo_height()
 if f_height / limit < 20:
+    print("Limit: " + str(int(f_height / 20)))
     sys.exit()
+buttons = [tk.Button(frame, relief="flat", borderwidth=0, highlightthickness=0, command=lambda: open_tab(""), text="") for l in range(limit)]
+number = [tk.Button(frame, relief="flat", borderwidth=0, highlightthickness=0, command=lambda: open_tab(""), text=str(n+1)) for n in range(limit)]
 for b in range(len(buttons)):
     buttons[b].place(x=f_width / 6, y=(b*f_height/limit), width=(f_width*5/6), height=f_height / limit)
     number[b].place(x=0, y=(b*f_height/limit), width=f_width / 6, height=f_height / limit)
