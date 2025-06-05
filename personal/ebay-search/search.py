@@ -38,9 +38,10 @@ def open_tab(url):
 def grab_token():
     username = os.getenv("EBAY_APP_ID")
     password = os.getenv("EBAY_CERT_ID")
+    key = base64.b64encode(str(username + ":" + password).encode('utf-8')).decode('utf-8')
     token_headers = {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": f"Basic {base64.b64encode(str(username + ":" + password).encode('utf-8')).decode('utf-8')}"
+        "Authorization": f"Basic {key}"
     }
     token_payload = {
         "grant_type": "client_credentials",
