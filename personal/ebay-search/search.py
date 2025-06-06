@@ -10,8 +10,6 @@ import base64
 import json
 from dotenv import load_dotenv
 import webbrowser
-import sys
-limit = int(sys.argv[1])
 load_dotenv()
 width = pyautogui.size().width
 height = pyautogui.size().height
@@ -26,9 +24,7 @@ frame.place(x=w / 8, y=h / 8, width=(w*3/4), height=(h*7/8))
 root.update_idletasks()
 f_width = frame.winfo_width()
 f_height = frame.winfo_height()
-if f_height / limit < 20:
-    print("Limit: " + str(int(f_height / 20)))
-    sys.exit()
+limit = int(f_height / 20)
 buttons = [tk.Button(frame, relief="flat", borderwidth=0, highlightthickness=0, command=lambda: open_tab(""), text="") for l in range(limit)]
 number = [tk.Button(frame, relief="flat", borderwidth=0, highlightthickness=0, command=lambda: open_tab(""), text=str(n+1)) for n in range(limit)]
 for b in range(len(buttons)):
@@ -53,7 +49,7 @@ def grab_token():
     access_token = token_data.get('access_token')
     return access_token
 token = grab_token()
-def search(query):
+def search(query, window="main"):
     search_query.set("")
     headers = {
         "Authorization": f"Bearer {token}",
@@ -61,16 +57,25 @@ def search(query):
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
-    params = {
-        "q": query,
-        "limit": limit
-    }
+    if window == "main":
+        params = {
+            "q": query,
+            "limit": limit
+        }
+    else:
+        params = {
+            "q": query,
+            "limit": int(limit/2)
+        }
     response = requests.get("https://api.ebay.com/buy/browse/v1/item_summary/search", headers=headers, params=params)
     results = response.json()["itemSummaries"]
-    for i in range(len(results)):
-        buttons[i].config(text=results[i]['title'] + ", $" + results[i]['price']['value'] + ", " + results[i]['condition'])
-        buttons[i].config(command=lambda web_url=results[i]['itemWebUrl']: open_tab(web_url))
-        number[i].config(command=lambda web_url=results[i]['itemWebUrl']: open_tab(web_url))
+    if window == "main":
+        for i in range(len(results)):
+            buttons[i].config(text=results[i]['title'] + ", $" + results[i]['price']['value'] + ", " + results[i]['condition'])
+            buttons[i].config(command=lambda web_url=results[i]['itemWebUrl']: open_tab(web_url))
+            number[i].config(command=lambda web_url=results[i]['itemWebUrl']: open_tab(web_url))
+    else:
+        return [results[i]['title'] + ", $" + results[i]['price']['value'] + ", " + results[i]['condition'] for i in range(len(results))]
 def press(event):
     if event.keysym == 'Return':
         search(search_query.get())
@@ -80,4 +85,15 @@ q.place(x=w / 4, y=0, width=(w*7/16), height=h / 8)
 send = tk.Button(root, text="Search", relief="flat", borderwidth=0, highlightthickness=0, command=lambda: search(search_query.get()))
 send.place(x=(w*11/16), y=0, width=w / 16, height=h / 8)
 root.bind("<Key>", press)
+window = tk.Toplevel(root)
+window.geometry(str(int(w/2)) + "x" + str(int(h/2)))
+window.title("PC Builder")
+root.update_idletasks()
+window_w = window.winfo_width()
+window_h = window.winfo_height()
+queries = [search("motherboard", "secondary"), search("ram", "secondary"), search("internal storage", "secondary"), search("processor", "secondary")]
+stringvars = [tk.StringVar(window, value=q[0]) for q in queries]
+menus = [tk.OptionMenu(window, stringvars[s], *queries[s]) for s in range(len(stringvars))]
+for m in range(len(menus)):
+    menus[m].place(x=window_w / 4, y=(m*window_h/8), width=window_w / 2, height=window_h / 8)
 root.mainloop()
